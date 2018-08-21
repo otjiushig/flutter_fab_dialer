@@ -27,7 +27,6 @@ class FabMiniMenuItem {
 		this.chipColor = null;
 		this.textColor = null;
 	}
-
 }
 
 class FabMenuMiniItemWidget extends StatelessWidget {
