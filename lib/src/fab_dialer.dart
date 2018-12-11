@@ -2,7 +2,7 @@ part of fab_dialer;
 
 class FabDialer extends StatefulWidget {
   const FabDialer(this._fabMiniMenuItemList, this._fabColor, this._fabIcon,
-      [this._closeFabIcon,this.onLongPress, this._animationDuration]);
+      [this._closeFabIcon, this.onLongPress, this._animationDuration]);
 
   final List<FabMiniMenuItem> _fabMiniMenuItemList;
   final Color _fabColor;
@@ -13,31 +13,20 @@ class FabDialer extends StatefulWidget {
 
 
   @override
-  FabDialerState createState() =>
-      FabDialerState(
-          _fabMiniMenuItemList, _fabColor, _fabIcon, _closeFabIcon,
-          _animationDuration);
+  FabDialerState createState() => FabDialerState();
 }
 
 class FabDialerState extends State<FabDialer> with TickerProviderStateMixin {
-  FabDialerState(this._fabMiniMenuItemList, this._fabColor, this._fabIcon,
-      this._closeFabIcon, this._animationDuration);
-
   bool _isRotated = false;
-  final List<FabMiniMenuItem> _fabMiniMenuItemList;
-  final Color _fabColor;
-  final Icon _fabIcon;
-  final Icon _closeFabIcon;
-  final int _animationDuration;
-  List<FabMenuMiniItemWidget> _fabMenuItems;
+  List<FabMenuMiniItemWidget> _fabMenuItems = [];
 
   AnimationController _controller;
 
   @override
   void initState() {
-    final int animationDuration = _animationDuration == null
+    final int animationDuration = widget._animationDuration == null
         ? 180
-        : _animationDuration;
+        : widget._animationDuration;
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: animationDuration),
@@ -45,28 +34,25 @@ class FabDialerState extends State<FabDialer> with TickerProviderStateMixin {
 
     _controller.reverse();
 
-    setFabMenu(this._fabMiniMenuItemList);
     super.initState();
   }
 
   void setFabMenu(List<FabMiniMenuItem> fabMenuList) {
-    List<FabMenuMiniItemWidget> fabMenuItems = List();
-    for (int i = 0; i < _fabMiniMenuItemList.length; i++) {
-      fabMenuItems.add(FabMenuMiniItemWidget(
-        tooltip: _fabMiniMenuItemList[i].tooltip,
-        text: _fabMiniMenuItemList[i].text,
-        elevation: _fabMiniMenuItemList[i].elevation,
-        icon: _fabMiniMenuItemList[i].icon,
+    _fabMenuItems.clear();
+    for (int i = 0; i < widget._fabMiniMenuItemList.length; i++) {
+      _fabMenuItems.add(FabMenuMiniItemWidget(
+        tooltip: widget._fabMiniMenuItemList[i].tooltip,
+        text: widget._fabMiniMenuItemList[i].text,
+        elevation: widget._fabMiniMenuItemList[i].elevation,
+        icon: widget._fabMiniMenuItemList[i].icon,
         index: i,
-        onPressed: _fabMiniMenuItemList[i].onPressed,
-        textColor: _fabMiniMenuItemList[i].textColor,
-        fabColor: _fabMiniMenuItemList[i].fabColor,
-        chipColor: _fabMiniMenuItemList[i].chipColor,
+        onPressed: widget._fabMiniMenuItemList[i].onPressed,
+        textColor: widget._fabMiniMenuItemList[i].textColor,
+        fabColor: widget._fabMiniMenuItemList[i].fabColor,
+        chipColor: widget._fabMiniMenuItemList[i].chipColor,
         controller: _controller,
       ));
     }
-
-    this._fabMenuItems = fabMenuItems;
   }
 
   void _rotate() {
@@ -81,9 +67,12 @@ class FabDialerState extends State<FabDialer> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final Icon closeIcon = _closeFabIcon == null
+    final Icon closeIcon = widget._closeFabIcon == null
         ? Icon(Icons.close)
-        : _closeFabIcon;
+        : widget._closeFabIcon;
+
+    setFabMenu(widget._fabMiniMenuItemList);
+
     return Container(
         margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         child: Column(
@@ -107,9 +96,9 @@ class FabDialerState extends State<FabDialer> with TickerProviderStateMixin {
                             alignment: Alignment.center,
                             child: _controller.value >= 0.5
                                 ? closeIcon
-                                : _fabIcon,
+                                : widget._fabIcon,
                           ),
-                          backgroundColor: _fabColor,
+                          backgroundColor: widget._fabColor,
                           onPressed: _rotate),
                       onLongPress: widget.onLongPress,
                     );
