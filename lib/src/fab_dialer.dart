@@ -2,7 +2,8 @@ part of fab_dialer;
 
 class FabDialer extends StatefulWidget {
   const FabDialer(this._fabMiniMenuItemList, this._fabColor, this._fabIcon,
-      [this._closeFabIcon, this.onLongPress, this._animationDuration]);
+      [this._closeFabIcon, this.onLongPress, this._animationDuration, Key key])
+      : super(key: key);
 
   final List<FabMiniMenuItem> _fabMiniMenuItemList;
   final Color _fabColor;
@@ -62,6 +63,13 @@ class FabDialerState extends State<FabDialer> with TickerProviderStateMixin {
     } else {
       _isRotated = true;
       _controller.forward();
+    }
+  }
+
+  void close() {
+    if (_isRotated) {
+      _isRotated = false;
+      _controller.reverse();
     }
   }
 
